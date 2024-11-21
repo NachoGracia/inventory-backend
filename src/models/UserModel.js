@@ -34,4 +34,23 @@ const insertUser = async (email, password, role = "user") => {
   }
 };
 
-module.exports = { getAllUsers, insertUser };
+// Login usuario
+
+const loginUser = async (email) => {
+  const client = await getDbClient();
+
+  try {
+    const res = await client.query(
+      "SELECT email, password FROM users WHERE email = $1",
+      [email]
+    );
+    return res.rows[0];
+  } catch (error) {
+    console.error("Error gettin email from db");
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+module.exports = { getAllUsers, insertUser, loginUser };
