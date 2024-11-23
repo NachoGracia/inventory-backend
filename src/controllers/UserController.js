@@ -1,5 +1,6 @@
 const { getAllUsers, insertUser, loginUser } = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const getUsers = async (req, res) => {
   try {
@@ -26,6 +27,7 @@ const createUser = async (req, res) => {
     res.status(400).json({ error: "Error creating user" });
   }
 };
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -46,11 +48,30 @@ const login = async (req, res) => {
     if (!validatePassword) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
-    res.status(200).json({ message: "Login successful", email: user.email });
+
+    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: false, // Solo en HTTPS si está en producción
+      sameSite: "strict", // Previene CSRF
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({ message: "Login successful" });
   } catch (error) {
     console.error("Error logging in user:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-module.exports = { getUsers, createUser, login };
+const logout = (req, res) => {
+  res.clearCookie("authToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+};
+
+module.exports = { getUsers, createUser, login, logout };
