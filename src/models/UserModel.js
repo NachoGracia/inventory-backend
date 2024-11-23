@@ -12,7 +12,7 @@ const getAllUsers = async () => {
     console.error("Error obteniendo usuarios:", error);
     throw error;
   } finally {
-    client.release(); // Liberar la conexión
+    client.release();
   }
 };
 

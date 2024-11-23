@@ -12,6 +12,7 @@ const {
   validatePasswordForLogin,
 } = require("../middleware/userValidation");
 const { validateRequest } = require("../middleware/validateRequest");
+const verifyToken = require("../middleware/verifyToken ");
 
 router.get("/users", getUsers);
 router.post(
@@ -28,4 +29,6 @@ router.post(
   validateRequest,
   login
 );
+
+// router.get("/dashboard", verifyToken, validateRequest, dashboard);
 module.exports = router;
