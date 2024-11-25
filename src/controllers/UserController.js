@@ -1,77 +1,77 @@
-const { getAllUsers, insertUser, loginUser } = require("../models/UserModel");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const { getAllUsers, insertUser, loginUser } = require('../models/UserModel')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const getUsers = async (req, res) => {
   try {
-    const users = await getAllUsers();
-    res.status(200).json(users);
+    const users = await getAllUsers()
+    res.status(200).json(users)
   } catch (error) {
-    res.status(500).json({ error: "Error loading users" });
+    res.status(500).json({ error: 'Error loading users' })
   }
-};
+}
 
 const createUser = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, password, role } = req.body
 
   if (!email || !password) {
-    return res.status(400).json({ error: "email and password are required" });
+    return res.status(400).json({ error: 'email and password are required' })
   }
 
   try {
-    const salt = await bcrypt.genSalt(10);
-    const passwordHashed = await bcrypt.hash(password, salt);
-    const newUser = await insertUser(email, passwordHashed, role);
-    res.status(201).json(newUser);
+    const salt = await bcrypt.genSalt(10)
+    const passwordHashed = await bcrypt.hash(password, salt)
+    const newUser = await insertUser(email, passwordHashed, role)
+    res.status(201).json(newUser)
   } catch (error) {
-    res.status(400).json({ error: "Error creating user" });
+    res.status(400).json({ error: 'Error creating user' })
   }
-};
+}
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body
 
   if (!email || !password) {
     return res
       .status(400)
-      .json({ error: "Email and password are required  for login" });
+      .json({ error: 'Email and password are required  for login' })
   }
 
   try {
-    const user = await loginUser(email);
+    const user = await loginUser(email)
 
     if (!user) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res.status(401).json({ error: 'Invalid email or password' })
     }
-    const validatePassword = await bcrypt.compare(password, user.password);
+    const validatePassword = await bcrypt.compare(password, user.password)
 
     if (!validatePassword) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res.status(401).json({ error: 'Invalid email or password' })
     }
 
     const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
-      expiresIn: "24h",
-    });
-    res.cookie("authToken", token, {
+      expiresIn: '24h'
+    })
+    res.cookie('authToken', token, {
       httpOnly: true,
       secure: false, // Solo en HTTPS si está en producción
-      sameSite: "strict", // Previene CSRF
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-    res.status(200).json({ message: "Login successful" });
+      sameSite: 'strict', // Previene CSRF
+      maxAge: 24 * 60 * 60 * 1000
+    })
+    res.status(200).json({ message: 'Login successful' })
   } catch (error) {
-    console.error("Error logging in user:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error logging in user:', error)
+    res.status(500).json({ error: 'Internal server error' })
   }
-};
+}
 
 const logout = (req, res) => {
-  res.clearCookie("authToken", {
+  res.clearCookie('authToken', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-  res.status(200).json({ message: "Logged out successfully" });
-};
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  })
+  res.status(200).json({ message: 'Logged out successfully' })
+}
 
-module.exports = { getUsers, createUser, login, logout };
+module.exports = { getUsers, createUser, login, logout }

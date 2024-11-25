@@ -1,23 +1,23 @@
-const { body } = require("express-validator");
+const { body } = require('express-validator')
 
 const validateEmail = [
-  body("email").isEmail().withMessage("Email must be a valir email adress"),
-];
+  body('email').isEmail().withMessage('Email must be a valir email adress')
+]
 
 const validatePassword = [
-  body("password")
+  body('password')
     .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters long")
+    .withMessage('Password must be at least 8 characters long')
     .matches(/[A-Z]/)
-    .withMessage("Password must contain at least one uppercase letter")
+    .withMessage('Password must contain at least one uppercase letter')
     .matches(/[0-9]/)
-    .withMessage("Password must contain at least one number")
+    .withMessage('Password must contain at least one number')
     .matches(/[!@#$%^&*]/)
-    .withMessage("Password must contain at least one special character"),
-];
+    .withMessage('Password must contain at least one special character')
+]
 
 const validatePasswordForLogin = [
-  body("password").notEmpty().withMessage("Password is required"),
-];
+  body('password').notEmpty().withMessage('Password is required')
+]
 
-module.exports = { validateEmail, validatePassword, validatePasswordForLogin };
+module.exports = { validateEmail, validatePassword, validatePasswordForLogin }
