@@ -32,4 +32,5 @@ const insertItem = async (item, description = item, quantity) => {
     client.release()
   }
 }
+
 module.exports = { getAllItems, insertItem }
