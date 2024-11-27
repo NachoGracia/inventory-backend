@@ -53,4 +53,23 @@ const loginUser = async (email) => {
   }
 }
 
-module.exports = { getAllUsers, insertUser, loginUser }
+// Delete usuario
+
+const deteleUser = async (id) => {
+  const client = await getDbClient()
+
+  try {
+    const res = await client.query(
+      'DELETE FROM users WHERE id = $1 RETURNING *',
+      [id]
+    )
+    return res.rows[0]
+  } catch (error) {
+    console.error('Error delete user', error)
+    throw error
+  } finally {
+    client.release()
+  }
+}
+
+module.exports = { getAllUsers, insertUser, loginUser, deteleUser }
