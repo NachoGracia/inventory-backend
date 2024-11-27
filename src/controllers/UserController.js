@@ -1,6 +1,12 @@
-const { getAllUsers, insertUser, loginUser } = require('../models/UserModel')
+const {
+  getAllUsers,
+  insertUser,
+  loginUser,
+  deteleUser
+} = require('../models/UserModel')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
 
 const getUsers = async (req, res) => {
   try {
@@ -74,4 +80,23 @@ const logout = (req, res) => {
   res.status(200).json({ message: 'Logged out successfully' })
 }
 
-module.exports = { getUsers, createUser, login, logout }
+const deleteUserController = async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const deletedUser = await deteleUser(id)
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    return res
+      .status(200)
+      .json({ message: 'User deleted successfully', deletedUser })
+  } catch (error) {
+    console.error('Error in deleteUserController:', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+module.exports = { getUsers, createUser, login, logout, deleteUserController }
