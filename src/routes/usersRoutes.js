@@ -4,7 +4,8 @@ const router = express.Router()
 const {
   getUsers,
   createUser,
-  login
+  login,
+  deleteUserController
 } = require('../controllers/UserController')
 const {
   validateEmail,
@@ -29,6 +30,8 @@ router.post(
   validateRequest,
   login
 )
+
+router.delete('/users/delete/:id', validateRequest, deleteUserController)
 
 // router.get("/dashboard", verifyToken, validateRequest, dashboard);
 module.exports = router
