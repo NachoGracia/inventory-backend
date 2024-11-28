@@ -2,9 +2,9 @@ const express = require('express')
 
 const router = express.Router()
 const {
-  getUsers,
-  createUser,
-  login,
+  getAllUsersController,
+  createUserController,
+  loginUserController,
   deleteUserController
 } = require('../controllers/UserController')
 const {
@@ -15,20 +15,20 @@ const {
 const { validateRequest } = require('../middleware/validateRequest')
 const verifyToken = require('../middleware/verifyToken ')
 
-router.get('/users', getUsers)
+router.get('/users', getAllUsersController)
 router.post(
   '/users',
   validateEmail,
   validatePassword,
   validateRequest,
-  createUser
+  createUserController
 )
 router.post(
   '/users/login',
   validateEmail,
   validatePasswordForLogin,
   validateRequest,
-  login
+  loginUserController
 )
 
 router.delete('/users/delete/:id', validateRequest, deleteUserController)

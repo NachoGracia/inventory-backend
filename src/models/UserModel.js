@@ -18,7 +18,7 @@ const getAllUsers = async () => {
 
 // Insertar usuario
 
-const insertUser = async (email, password, role = 'user') => {
+const createUser = async (email, password, role = 'user') => {
   const client = await getDbClient()
   try {
     const res = await client.query(
@@ -72,4 +72,4 @@ const deleteUser = async (id) => {
   }
 }
 
-module.exports = { getAllUsers, insertUser, loginUser, deleteUser }
+module.exports = { getAllUsers, createUser, loginUser, deleteUser }

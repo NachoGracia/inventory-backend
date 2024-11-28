@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 
-const getUsers = async (req, res) => {
+const getAllUsersController = async (req, res) => {
   try {
     const users = await getAllUsers()
     res.status(200).json(users)
@@ -17,7 +17,7 @@ const getUsers = async (req, res) => {
   }
 }
 
-const createUser = async (req, res) => {
+const createUserController = async (req, res) => {
   const { email, password, role } = req.body
 
   if (!email || !password) {
@@ -34,7 +34,7 @@ const createUser = async (req, res) => {
   }
 }
 
-const login = async (req, res) => {
+const loginUserController = async (req, res) => {
   const { email, password } = req.body
 
   if (!email || !password) {
@@ -71,7 +71,7 @@ const login = async (req, res) => {
   }
 }
 
-const logout = (req, res) => {
+const logoutController = (req, res) => {
   res.clearCookie('authToken', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -99,4 +99,10 @@ const deleteUserController = async (req, res) => {
   }
 }
 
-module.exports = { getUsers, createUser, login, logout, deleteUserController }
+module.exports = {
+  getAllUsersController,
+  createUserController,
+  loginUserController,
+  logoutController,
+  deleteUserController
+}
