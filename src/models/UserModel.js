@@ -55,7 +55,7 @@ const loginUser = async (email) => {
 
 // Delete usuario
 
-const deteleUser = async (id) => {
+const deleteUser = async (id) => {
   const client = await getDbClient()
 
   try {
@@ -72,4 +72,4 @@ const deteleUser = async (id) => {
   }
 }
 
-module.exports = { getAllUsers, insertUser, loginUser, deteleUser }
+module.exports = { getAllUsers, insertUser, loginUser, deleteUser }

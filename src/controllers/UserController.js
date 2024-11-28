@@ -2,7 +2,7 @@ const {
   getAllUsers,
   insertUser,
   loginUser,
-  deteleUser
+  deleteUser
 } = require('../models/UserModel')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -84,7 +84,7 @@ const deleteUserController = async (req, res) => {
   const { id } = req.params
 
   try {
-    const deletedUser = await deteleUser(id)
+    const deletedUser = await deleteUser(id)
 
     if (!deletedUser) {
       return res.status(404).json({ message: 'User not found' })
